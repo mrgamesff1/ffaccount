@@ -79,17 +79,20 @@ const maxAttempts = 2;
 let now = new Date().getTime();
 let attempts = JSON.parse(localStorage.getItem('attempts')) || { lastReset: now, count: 0 };
 
+// إعادة ضبط كل 24 ساعة
 if(now - attempts.lastReset >= 24*60*60*1000){
     attempts = { lastReset: now, count: 0 };
     localStorage.setItem('attempts', JSON.stringify(attempts));
 }
 
+// تحديث عداد المحاولات
 function updateAttemptsLeft(){
     const left = maxAttempts - attempts.count;
     attemptsLeftSpan.textContent = left >= 0 ? left : 0;
 }
 updateAttemptsLeft();
 
+// رسالة انتهاء المحاولات
 function showCooldownMessage(endTime){
     document.getElementById('formContainer').innerHTML = `
       <h2>🚫 لقد استنفذت محاولاتك لهذا اليوم</h2>
@@ -116,6 +119,7 @@ function showCooldownMessage(endTime){
     const timerInterval = setInterval(updateCountdown,1000);
 }
 
+// التحقق من عدد المحاولات
 if(attempts.count >= maxAttempts){
     const endTime = new Date(attempts.lastReset + 24*60*60*1000);
     showCooldownMessage(endTime);
@@ -124,16 +128,12 @@ if(attempts.count >= maxAttempts){
     function validateForm(){
         let valid = true;
         const nameVal = username.value.trim();
-        const allowedPattern = /^[A-Za-z0-9]+$/; // فقط إنجليزي وأرقام
+        const allowedPattern = /^[A-Za-z0-9]+$/;
 
-        if(nameVal===''){ 
-            usernameError.style.display='none'; 
-            valid=false; 
-        } 
+        if(nameVal===''){ usernameError.style.display='none'; valid=false; } 
         else if(!allowedPattern.test(nameVal) || nameVal.length < 6 || (nameVal.match(/\d/g)||[]).length < 3){ 
             usernameError.textContent='الاسم يجب أن يكون بالإنجليزية، ويحتوي على 6 أحرف على الأقل و3 أرقام على الأقل'; 
-            usernameError.style.display='block'; 
-            valid=false; 
+            usernameError.style.display='block'; valid=false; 
         } else usernameError.style.display='none';
 
         if(level.value===''){ levelError.style.display='none'; valid=false; } 
@@ -174,12 +174,10 @@ if(attempts.count >= maxAttempts){
         return usernameVal.replace(/\s+/g,'').toLowerCase() + randomNum + domain;
     }
 
-    const links = ['https://xdabo.com/7m8K','https://linkjust.com/Qov9j'];
-
-    generateBtn.addEventListener('click',()=>{
-        const u=username.value.trim();
-        const pw=generatePassword(10);
-        const email=generateRandomEmail(u, accountType.value);
+    generateBtn.addEventListener('click', ()=>{
+        const u = username.value.trim();
+        const pw = generatePassword(10);
+        const email = generateRandomEmail(u, accountType.value);
         localStorage.setItem('username', u);
         localStorage.setItem('level', level.value);
         localStorage.setItem('diamonds', diamonds.value);
@@ -193,7 +191,13 @@ if(attempts.count >= maxAttempts){
         localStorage.setItem('attempts', JSON.stringify(attempts));
         updateAttemptsLeft();
 
-        const targetLink = links[attempts.count-1] || links[1];
+        let targetLink = '';
+        if(attempts.count === 1){
+            targetLink = 'https://xdabo.com/7m8K';
+        } else if(attempts.count === 2){
+            targetLink = 'https://linkjust.com/Qov9j';
+        }
+
         window.location.href = targetLink;
     });
 
@@ -209,10 +213,8 @@ if(attempts.count >= maxAttempts){
     diamonds.addEventListener('input', ()=>{ diamonds.value = diamonds.value.replace(/\D/g,''); });
     coins.addEventListener('input', ()=>{ coins.value = coins.value.replace(/\D/g,''); });
 
-    // منع أي حرف غير إنجليزي أو رقم نهائيًا أثناء الكتابة
-    username.addEventListener('input', ()=>{
-        username.value = username.value.replace(/[^A-Za-z0-9]/g,'');
-    });
+    // منع أي حرف غير إنجليزي أو رقم
+    username.addEventListener('input', ()=>{ username.value = username.value.replace(/[^A-Za-z0-9]/g,''); });
 
 }
 </script>
