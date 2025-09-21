@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>حسابك تم إنشاؤه - محاولة 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* نفس التنسيقات كما في account2 السابق */
+</style>
+</head>
+<body>
+<div class="container">
+<h2>🎉 تم إنشاء الحساب بنجاح!</h2>
+<div id="successMessage">إذا لم يعمل معك الحساب، قم بإنشاء حساب آخر!</div>
+<div class="info"><div class="label">اسم الحساب:</div><div class="value" id="showUsername"></div></div>
+<div class="info"><div class="label">البريد الإلكتروني:</div><div class="value" id="showEmail"></div></div>
+<div class="info"><div class="label">كلمة المرور:</div><div class="value" id="showPassword"></div></div>
+<div class="info"><div class="label">المستوى:</div><div class="value" id="showLevel"></div></div>
+<div class="info"><div class="label">الجواهر:</div><div class="value" id="showDiamonds"></div></div>
+<div class="info"><div class="label">الذهب:</div><div class="value" id="showCoins"></div></div>
+<div class="info"><div class="label">نوع الحساب:</div><div class="value" id="showAccountType"></div></div>
+<div class="info"><div class="label">جنس الحساب:</div><div class="value" id="showGender"></div></div>
+<button id="createAnotherBtn">إنشاء حساب آخر</button>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const trial = params.get('trial');
+if(trial !== '2'){ window.location.href = 'index.html'; }
+
+const username     = localStorage.getItem('username') || 'غير موجود';
+const password     = localStorage.getItem('password') || 'غير موجود';
+const level        = localStorage.getItem('level') || 'غير موجود';
+const diamonds     = localStorage.getItem('diamonds') || 'غير موجود';
+const coins        = localStorage.getItem('coins') || 'غير موجود';
+const accountType  = localStorage.getItem('accountType') || 'غير موجود';
+const gender       = localStorage.getItem('gender') || 'غير موجود';
+
+document.getElementById('showUsername').textContent = username;
+document.getElementById('showEmail').textContent    = localStorage.getItem('email') || 'غير موجود';
+document.getElementById('showPassword').textContent = password;
+document.getElementById('showLevel').textContent    = level;
+document.getElementById('showDiamonds').textContent = diamonds;
+document.getElementById('showCoins').textContent    = coins;
+document.getElementById('showAccountType').textContent = accountType;
+document.getElementById('showGender').textContent      = gender;
+
+document.getElementById('createAnotherBtn').addEventListener('click', ()=>{
+    window.location.href = 'index.html';
+});
+</script>
+</body>
+</html>
